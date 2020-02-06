@@ -3,18 +3,28 @@ import Formulario from "./components/Formulario";
 import Cita from "./components/Cita";
 
 function App() {
-  // Arreglo de citas
-  const [citas, guardarCitas] = useState([]);
+  // Citas en local storage
+  let citasIniciales = JSON.parse(localStorage.getItem("citas"));
+  if (!citasIniciales) {
+    citasIniciales = [];
+  }
 
-  // Use Effect para realizar ciertas operaciones cuando el state cambia
-  useEffect(() => {
-    console.log("Documento listo o algo paso con las citas");
-  }, [citas]);
+  // Arreglo de citas
+  const [citas, guardarCitas] = useState(citasIniciales);
 
   // Función que tome las citas actuales y agregue la nueva
   const crearCita = cita => {
     guardarCitas([...citas, cita]);
   };
+
+  // Use Effect para realizar ciertas operaciones cuando el state cambia
+  useEffect(() => {
+    if (citasIniciales) {
+      localStorage.setItem("citas", JSON.stringify(citas));
+    } else {
+      localStorage.setItem("citas", JSON.stringify([]));
+    }
+  }, [citas]);
 
   // Función que elimina una cita por su id
   const eliminarCita = id => {
